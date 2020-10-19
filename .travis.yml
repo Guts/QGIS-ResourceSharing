@@ -6,32 +6,29 @@ python: 3.7
 services:
   - docker
 
-env:
-  global:
-    - IMAGE=qgis/qgis
-
-  matrix:
-    - QGIS_VERSION_TAG=latest
-
 cache:
   directories:
     - $HOME/.cache/pip
 
-addons:
-  apt:
-    packages:
-      - git
-      - python-software-properties
+include:
+  - stage: Run tests
+    name: QGIS Desktop
+    install:
+      - cd .docker
+      - ./start.sh
+    script:
+      - ./exec.sh
 
-before_install:
-  - docker pull ${IMAGE}:${QGIS_VERSION_TAG}
 
-install:
-  - python -m pip install -U -r requirements/development.txt
-  - python -m pip install --no-deps -U -r requirements/embedded.txt -t ext_libs
-  - docker run -d --name qgis-testing-environment -v ${TRAVIS_BUILD_DIR}:/tests_directory -e DISPLAY=:99 ${IMAGE}:${QGIS_VERSION_TAG}
-  - sleep 10
-  - docker exec -it qgis-testing-environment sh -c "qgis_setup.sh qgis_resource_sharing"
+# before_install:
+#   - docker pull ${IMAGE}:${QGIS_VERSION_TAG}
 
-script:
-  - docker exec -it qgis-testing-environment sh -c "cd /tests_directory && qgis_testrunner.sh test_suite.test_qgis3"
+# install:
+#   - python -m pip install -U -r requirements/development.txt
+#   - python -m pip install --no-deps -U -r requirements/embedded.txt -t ext_libs
+#   - docker run -d --name qgis-testing-environment -v ${TRAVIS_BUILD_DIR}:/tests_directory -e DISPLAY=:99 ${IMAGE}:${QGIS_VERSION_TAG}
+#   - sleep 10
+#   - docker exec -it qgis-testing-environment sh -c "qgis_setup.sh qgis_resource_sharing"
+
+# script:
+#   - docker exec -it qgis-testing-environment sh -c "cd /tests_directory && qgis_testrunner.sh test_suite.test_qgis3"
