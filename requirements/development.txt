@@ -1,0 +1,7 @@
+# Develop matching the development guidelines
+# -------------------------------------------
+
+black==20.8b1
+pycodestyle>=2.6,<2.7
+pylint>=2.6,<2.7
+qgis-plugin-ci>=1.8,<1.9
