@@ -6,6 +6,8 @@ python: 3.7
 services:
   - docker
 
+install: skip
+
 cache:
   directories:
     - $HOME/.cache/pip
